@@ -1,5 +1,8 @@
 "use strict";
 
+//twist.js by Sherry Nelson:
+//Variation of ex. programs "gasket2.js" combined with "rotatingSquare2.js"
+
 var canvas;
 var gl;
 
@@ -57,7 +60,28 @@ window.onload = function init()
 
 function triangle( a, b, c )
 {
-    points.push( a, b, c );
+	var a_twist = twistNscale(a);
+	var b_twist = twistNscale(b);
+	var c_twist = twistNscale(c);
+//console.log("Twisted pts: a=" + a_twist + " b=" + b_twist + " c=" + c_twist);
+    points.push( a_twist, b_twist, c_twist );
+}
+function twistNscale(vec){
+	var x = vec[0];
+	var y = vec[1];
+	//set theta to an  arbitrary angle (45 degrees) to rotate triangle:
+	var theta = 45 * Math.PI/180;
+	//d= distance from origin
+	var d = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+	//the rotated x position of this point:
+	var x_rot = x*Math.cos(d*theta) - y*Math.sin(d*theta);
+	//the rotated y position of this point:
+	var y_rot = x*Math.sin(d*theta) + y*Math.cos(d*theta);
+
+	//scale down by half to make triangle fit on canvas:
+	var vec_rot = vec2(x_rot/2, y_rot/2);
+//console.log("func twist: vec=" + vec + " x rot " + x_rot);
+	return vec_rot;
 }
 
 function divideTriangle( a, b, c, count )
@@ -83,8 +107,12 @@ function divideTriangle( a, b, c, count )
         divideTriangle( a, ab, ac, count );
         divideTriangle( c, ac, bc, count );
         divideTriangle( b, bc, ab, count );
-	//one new triangle in middle:
+
+	//EDIT: include  middle triangles:
         divideTriangle( ab, ac, bc, count );
+	
+	//console.log("a=" + a + " b=" + b + " c=" + c + " count =" + count);
+	//console.log("ab=" + ab + " bc=" + bc + " ac=" + ac + " count =" + count);
     }
 }
 

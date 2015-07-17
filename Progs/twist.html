@@ -7,10 +7,13 @@
 
 <script id="vertex-shader" type="x-shader/x-vertex">
 attribute vec4 vPosition;
+attribute vec4 vColor;
+varying vec4 fColor;
 
 void
 main()
 {
+    fColor = vColor;
     gl_Position = vPosition;
 }
 </script>
@@ -18,10 +21,12 @@ main()
 <script id="fragment-shader" type="x-shader/x-fragment">
 precision mediump float;
 
+varying vec4 fColor;
 void
 main()
 {
-    gl_FragColor = vec4( 1.0, 0.0, 0.0, 1.0 );
+    //gl_FragColor = vec4( 1.0, 0.0, 0.0, 1.0 );
+	gl_FragColor = fColor;
 }
 </script>
 
@@ -42,6 +47,7 @@ recursive steps: 0 <input id="subdiv_slider" type="range" min="0" max="5" step="
 <div>
 theta angle: 0<input id="theta_slider" type="range" min="0" max="360" step="10" value="0" />360
 </div>
+
 <canvas id="gl-canvas" width="512" height="512">
 Oops ... your browser doesn't support the HTML5 canvas element
 </canvas>

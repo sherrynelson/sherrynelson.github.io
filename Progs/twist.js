@@ -13,6 +13,7 @@ var theta = 0.0;
 
 window.onload = function init()
 {
+    var colors = [1, 0, 0, 0, 1, 0, 0, 0, 1];
     canvas = document.getElementById( "gl-canvas" );
 
     gl = WebGLUtils.setupWebGL( canvas );
@@ -47,9 +48,16 @@ window.onload = function init()
 
     // Load the data into the GPU
 
+//var cBuffer = gl.createBuffer();
+ //   gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
+  //  gl.bufferData( gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW );
+
+   // var vColor = gl.getAttribLocation( program, "vColor" );
+   // gl.vertexAttribPointer( vColor, 3, gl.FLOAT, false, 0, 0 );
+  //  gl.enableVertexAttribArray( vColor );
+
     var bufferId = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
-   // gl.bufferData( gl.ARRAY_BUFFER, 8*Math.pow(3,6), gl.STATIC_DRAW );
     gl.bufferData( gl.ARRAY_BUFFER, flatten(points), gl.STATIC_DRAW );
 
     // Associate out shader variables with our data buffer
@@ -67,17 +75,22 @@ window.onload = function init()
         render();
     };
 
-    gl.clear( gl.COLOR_BUFFER_BIT );
-    gl.drawArrays( gl.TRIANGLES, 0, points.length );
+    //gl.clear( gl.COLOR_BUFFER_BIT );
+    //gl.drawArrays( gl.TRIANGLES, 0, 3 );
+   render();
 };
 
 function triangle( a, b, c )
 {
+ // add colors and vertices for one triangle
+
+
 	var a_twist = twistNscale(a);
 	var b_twist = twistNscale(b);
 	var c_twist = twistNscale(c);
 //console.log("Twisted pts: a=" + a_twist + " b=" + b_twist + " c=" + c_twist);
-    points.push( a_twist, b_twist, c_twist );
+    points.push( a_twist, b_twist, b_twist, c_twist, c_twist, a_twist );
+	//colors.push(Math.random(), Math.random(), Math.random());
 }
 function twistNscale(vec){
 	var x = vec[0];
@@ -143,7 +156,8 @@ function render()
     gl.bufferSubData(gl.ARRAY_BUFFER, 0, flatten(points));
 
     gl.clear( gl.COLOR_BUFFER_BIT );
-    gl.drawArrays( gl.TRIANGLES, 0, points.length );
+    gl.drawArrays( gl.LINES, 0, points.length );
+    //gl.drawArrays( gl.TRIANGLES, 0, points.length );
     points = [];
 }
 

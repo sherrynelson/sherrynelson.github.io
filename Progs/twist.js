@@ -10,6 +10,12 @@ var points = [];
 
 var NumTimesToSubdivide = 5;
 var theta = 0.0;
+//set points of equilateral triangle centered around origin:
+var vertices = [
+	vec2( -0.86, -0.5 ),
+            vec2(  0,  1 ),
+            vec2(  0.86, -0.5 )
+	];
 
 window.onload = function init()
 {
@@ -22,13 +28,7 @@ window.onload = function init()
  //  Initialize our data for the Sierpinski Gasket
     //
 
-    // First, initialize the corners of our gasket with three points.
 
-    var vertices = [
-        vec2( -1, -1 ),
-        vec2(  0,  1 ),
-        vec2(  1, -1 )
-    ];
 
     divideTriangle( vertices[0], vertices[1], vertices[2],
                     NumTimesToSubdivide);
@@ -82,21 +82,19 @@ window.onload = function init()
 
 function triangle( a, b, c )
 {
- // add colors and vertices for one triangle
+ // TODO: add colors  for one triangle
 
 
-	var a_twist = twistNscale(a);
-	var b_twist = twistNscale(b);
-	var c_twist = twistNscale(c);
+	var a_twist = twist(a);
+	var b_twist = twist(b);
+	var c_twist = twist(c);
 //console.log("Twisted pts: a=" + a_twist + " b=" + b_twist + " c=" + c_twist);
     points.push( a_twist, b_twist, b_twist, c_twist, c_twist, a_twist );
 	//colors.push(Math.random(), Math.random(), Math.random());
 }
-function twistNscale(vec){
+function twist(vec){
 	var x = vec[0];
 	var y = vec[1];
-	//set theta to an  arbitrary angle (45 degrees) to rotate triangle:
-//	var theta = 45 * Math.PI/180;
 	//d= distance from origin
 	var d = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
 	//the rotated x position of this point:
@@ -104,8 +102,7 @@ function twistNscale(vec){
 	//the rotated y position of this point:
 	var y_rot = x*Math.sin(d*theta) + y*Math.cos(d*theta);
 
-	//scale down by half to make triangle fit on canvas:
-	var vec_rot = vec2(x_rot/2, y_rot/2);
+	var vec_rot = vec2(x_rot, y_rot);
 //console.log("func twist: vec=" + vec + " x rot " + x_rot);
 	return vec_rot;
 }
@@ -116,6 +113,7 @@ function divideTriangle( a, b, c, count )
     // check for end of recursion
 
     if ( count === 0 ) {
+	console.log("a=" + a + " b=" + b + " c=" + c );
         triangle( a, b, c );
     }
     else {
@@ -134,7 +132,7 @@ function divideTriangle( a, b, c, count )
         divideTriangle( c, ac, bc, count );
         divideTriangle( b, bc, ab, count );
 
-	//EDIT: include  middle triangles:
+	//ADD: include  middle triangles:
         divideTriangle( ab, ac, bc, count );
 	
 	//console.log("a=" + a + " b=" + b + " c=" + c + " count =" + count);
@@ -144,11 +142,6 @@ function divideTriangle( a, b, c, count )
 
 function render()
 {
-   var vertices = [
-        vec2( -1, -1 ),
-        vec2(  0,  1 ),
-        vec2(  1, -1 )
-    ];
     points = [];
     divideTriangle( vertices[0], vertices[1], vertices[2],
                     NumTimesToSubdivide);
